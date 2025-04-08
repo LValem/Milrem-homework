@@ -2,6 +2,12 @@
   <div class="popup">
     <h4>Edit {{ waypoint.name }}</h4>
     <input v-model="name" />
+
+    <div class="coords">
+      <strong>Latitude:</strong> {{ waypoint.lat.toFixed(6) }}<br />
+      <strong>Longitude:</strong> {{ waypoint.lng.toFixed(6) }}
+    </div>
+
     <div class="buttons">
       <button @click="rename()">Rename</button>
       <button @click="deleteWp()">Delete</button>
@@ -10,6 +16,7 @@
     </div>
   </div>
 </template>
+
 
 <script lang="ts" setup>
 import { useUGVStore } from '@/store/ugv'

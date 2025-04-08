@@ -24,7 +24,7 @@ const getRotatedIcon = () =>
     })
 
 onMounted(() => {
-  map.value = L.map('map').setView([ugvStore.position.lat, ugvStore.position.lng], 16)
+  map.value = L.map('map', {attributionControl: false,}).setView([ugvStore.position.lat, ugvStore.position.lng], 16)
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map.value)
 
@@ -33,9 +33,14 @@ onMounted(() => {
     draggable: false,
   }).addTo(map.value)
 
-  // Update marker position from store
   ugvStore.$subscribe(() => {
-    ugvMarker.setLatLng([ugvStore.position.lat, ugvStore.position.lng])
+    const { lat, lng } = ugvStore.position
+    ugvMarker.setLatLng([lat, lng])
+
+    // ⬇️ If engine is on, center the map on the UGV
+    if (ugvStore.engineOn) {
+      map.value?.setView([lat, lng], map.value.getZoom(), { animate: true })
+    }
   })
 
   // Handle long press to open waypoint popup
@@ -43,10 +48,12 @@ onMounted(() => {
     longPressTimeout = setTimeout(() => {
       const id = crypto.randomUUID()
       const latlng = e.latlng
-      const name = `WP-${ugvStore.waypoints.length + 1}`
+      const name = `Waypoint-${ugvStore.waypoints.length + 1}`
 
       const popupContent = `
         <b>${name}</b><br/>
+        <small><strong>Lat:</strong> ${latlng.lat.toFixed(6)}<br/>
+        <strong>Lng:</strong> ${latlng.lng.toFixed(6)}</small><br/><br/>
         <button onclick="window.dispatchEvent(new CustomEvent('drive-to', { detail: ${JSON.stringify({
         lat: latlng.lat,
         lng: latlng.lng,
@@ -63,7 +70,7 @@ onMounted(() => {
     }, 700)
   })
 
-  map.value.on('mouseup', () => clearTimeout(longPressTimeout))
+  map.value.on('dblclick', () => clearTimeout(longPressTimeout))
 
   const step = 0.0001
   const diagonalStepLng = 0.00005
