@@ -16,7 +16,7 @@ import { useUGVStore } from '@/store/ugv'
 import WaypointPopup from './WaypointPopup.vue'
 
 const ugvStore = useUGVStore()
-const selected = ref()
+const selected = ref(null)
 const selectWaypoint = (wp: any) => {
   selected.value = wp
 }
@@ -39,10 +39,12 @@ const selectWaypoint = (wp: any) => {
   overflow-y: auto;
   font-family: monospace;
   display: flex;
+  flex-direction: column;
 }
 .waypoint-list ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 .waypoint-list li {
   cursor: pointer;

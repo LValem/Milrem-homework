@@ -9,20 +9,18 @@
     </div>
 
     <div class="buttons">
-      <button @click="rename()">Rename</button>
-      <button @click="deleteWp()">Delete</button>
-      <button @click="drive()">Drive</button>
-      <button @click="$emit('close')">Close</button>
+      <button class="popup-btn" @click="rename()">Rename</button>
+      <button class="popup-btn" @click="deleteWp()">Delete</button>
+      <button class="popup-btn" @click="drive()">Drive</button>
+      <button class="popup-btn" @click="$emit('close')">Close</button>
     </div>
   </div>
 </template>
-
 
 <script lang="ts" setup>
 import { useUGVStore } from '@/store/ugv'
 import { defineProps, ref } from 'vue'
 
-// Use proper types if you have them
 interface Waypoint {
   id: string
   name: string
@@ -31,23 +29,17 @@ interface Waypoint {
 }
 
 const props = defineProps<{ waypoint: Waypoint }>()
-const emit = defineEmits(['close'])
-
+const emit = defineEmits(['close', 'deleted'])
 const ugvStore = useUGVStore()
-
-// v-model on name field
 const name = ref(props.waypoint.name)
-
-// Methods
 const rename = () => {
   ugvStore.renameWaypoint(props.waypoint.id, name.value)
 }
-
 const deleteWp = () => {
   ugvStore.deleteWaypoint(props.waypoint.id)
+  emit('deleted', props.waypoint.id)
   emit('close')
 }
-
 const drive = () => {
   ugvStore.updatePosition(props.waypoint.lat, props.waypoint.lng)
 }
@@ -63,7 +55,20 @@ const drive = () => {
   padding: 1rem;
   z-index: 1000;
 }
-.buttons button {
-  margin: 5px;
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+/* Shared button styling to match the engine toggle button */
+.popup-btn {
+  background-color: rgba(128, 128, 128, 0.8);
+  border: 2px solid black;
+  border-radius: 6px;
+  color: white;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
 }
 </style>
