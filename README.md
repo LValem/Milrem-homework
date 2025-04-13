@@ -46,3 +46,9 @@ The most time-consuming and challenging part of the assignment was managing the 
 
 ## AI Assistance
 I used AI systems to generate the project structure, implement basic Leaflet plugins integration, and assist in refactoring code to improve functionality and organization. AI also contributed to drafting documentation and guiding development decisions throughout the project.
+
+## Video
+<video width="640" height="360" controls>
+  <source src="src/assets/milrem_video.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
